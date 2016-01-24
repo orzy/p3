@@ -5,7 +5,7 @@
  *  require
  *      * P3_Abstract
  *
- *  @version 3.1.0
+ *  @version 3.1.1
  *  @see     https://github.com/orzy/p3
  *  @license The MIT license (http://www.opensource.org/licenses/mit-license.php)
  */
@@ -111,13 +111,16 @@ class P3_Http extends P3_Abstract {
 		
 		$response = file_get_contents($url, false, $context);
 		
+		$msg = "\n[URL]\n$url\n[PARAMS]\n" . var_export($params, true);
+		
 		// HTTPレスポンスヘッダーは定義済み変数$http_response_headerにセットされる
 		if (is_array($http_response_header)) {
 			// ステータスが200でなければ例外を投げる
-			if (!preg_match('@^HTTP/1\\.. 200 @i', $http_response_header[0])) {
-				$msg = "\n[URL]\n$url\n[PARAMS]\n" . var_export($params, true);
+			if (!preg_match('@^HTTP/.\\.. 200 @i', $http_response_header[0])) {
 				throw new RuntimeException($http_response_header[0] . $msg);
 			}
+		} else {
+			throw new RuntimeException('Response header not found.' . $msg);
 		}
 		
 		return $response;
