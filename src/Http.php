@@ -96,7 +96,7 @@ class P3_Http extends P3_Abstract {
 	 *  @param	string	$url
 	 *  @param	array	$params
 	 *  @param	mixed	$headers	(Optional) HTTPリクエストヘッダー
-	 *  @param	string	レスポンスのbody
+	 *  @return	string	レスポンスのbody
 	 */
 	public function post($url, array $params, $headers = array()) {
 		$headers = (array)$headers;
@@ -113,9 +113,9 @@ class P3_Http extends P3_Abstract {
 		
 		$msg = "\n[URL]\n$url\n[PARAMS]\n" . var_export($params, true);
 		
-		// HTTPレスポンスヘッダーは定義済み変数$http_response_headerにセットされる
+		// HTTPレスポンスヘッダーは定義済み変数 $http_response_header にセットされる
 		if (is_array($http_response_header)) {
-			// ステータスが200でなければ例外を投げる
+			// HTTPステータスコードが200でなければ例外を投げる
 			if (!preg_match('@^HTTP/.\\.. 200 @i', $http_response_header[0])) {
 				throw new RuntimeException($http_response_header[0] . $msg);
 			}
